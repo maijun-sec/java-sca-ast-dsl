@@ -1,0 +1,87 @@
+<rules>
+    <rule language="java">
+        <id>BF350B98-B7D9-45B8-AF63-C3950D58E748</id>
+        <name>empty catch block</name>
+        <description>empty catch block</description>
+        <matcher>
+            <![CDATA[
+                CatchClause catchClause: catchClause match { empty }
+            ]]>
+        </matcher>
+    </rule>
+    <rule language="java">
+        <id>EC377C0A-3C95-4D91-B4F9-15CE5318FFA1</id>
+        <name>leftover debug code</name>
+        <description>leftover debug code</description>
+        <matcher>
+            <![CDATA[
+                MethodDeclaration md: md match {
+                    (methodName startWith "debug") and
+                    (parameterTypes.size == 1) and
+                    (parameterTypes[0].resolveType matches "java.util.List<.*?>")
+                }
+            ]]>
+        </matcher>
+    </rule>
+    <rule language="java">
+        <id>A41BFC7A-E73C-42E2-A2B9-B5C642D6A648</id>
+        <name>dangerous method call</name>
+        <description>dangerous method call</description>
+        <matcher>
+            <![CDATA[
+                MethodCallExpr mce: mce match {
+                    (method.name == "printStackTrace") && (method.enclosingClass == "java.lang.Throwable")
+                }
+            ]]>
+        </matcher>
+    </rule>
+    <rule language="java">
+        <id>244A5E44-8B81-4201-B37C-AA58E7C08058</id>
+        <name>password in comment</name>
+        <description>password in comment</description>
+        <matcher>
+            <![CDATA[
+                Comment comment: comment match {
+                    content matches "(?!).*password.*"
+                }
+            ]]>
+        </matcher>
+    </rule>
+    <rule language="java">
+        <id>0C971741-FF82-4EED-BC11-5F9DA7B3817F</id>
+        <name>return in catch block</name>
+        <description>return in catch block</description>
+        <matcher>
+            <![CDATA[
+                CatchClause catchClause: catchClause contain {
+                    simpleName == "ReturnStmt"
+                }
+            ]]>
+        </matcher>
+    </rule>
+    <rule language="java">
+        <id>CBBAD52B-1871-4120-A09F-F2013A92A518</id>
+        <name>overly broad catch</name>
+        <description>overly broad catch</description>
+        <matcher>
+            <![CDATA[
+                CatchClause catchClause: (catchClause match {
+                    (exception.type.resolveType == "java.lang.Exception") and (enclosingFunction.methodName != "main")
+                }) and
+                (!(catchClause contain {simpleName == "ThrowStmt"}))
+            ]]>
+        </matcher>
+    </rule>
+    <rule language="java">
+        <id>00A1F869-929A-4A89-ABA2-32D4A0DBA978</id>
+        <name>poor logging practice</name>
+        <description>poor logging practice</description>
+        <matcher>
+            <![CDATA[
+                FieldDeclaration fd: fd match {
+                    (!(static and final)) and (type.supers contain "java.util.logging.Logger")
+                }
+            ]]>
+        </matcher>
+    </rule>
+</rules>
